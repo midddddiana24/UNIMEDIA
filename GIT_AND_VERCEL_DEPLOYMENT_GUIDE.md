@@ -353,11 +353,91 @@ fetch(`${API_URL}/api/...`);
 
 ### Step 2: Add Environment Variable to Vercel
 
+Environment variables are settings that your app needs to run (like API keys).
+
+#### What is an Environment Variable?
+
+An environment variable is a "secret setting" your app uses. Examples:
+
+- **`GROQ_API_KEY`** - Your Groq AI API key (for speech-to-text, summarization)
+- **`FRONTEND_URL`** - Your frontend website URL (for security)
+- **`NODE_ENV`** - Set to "production" or "development"
+
+**Why not just put them in code?**
+
+- ❌ If you push API keys to GitHub, hackers can use them!
+- ✅ Environment variables keep secrets safe and hidden
+
+#### How to Add Environment Variables to Vercel
+
 1. In Vercel dashboard, go to your project
-2. Settings > Environment Variables
-3. Add:
-   - **Name:** `REACT_APP_API_URL`
-   - **Value:** `https://unimedia-backend.herokuapp.com`
+2. Click **Settings** (top menu)
+3. Click **Environment Variables** (left sidebar)
+4. Click **Add New** button
+5. Fill in:
+   - **Name:** `GROQ_API_KEY`
+   - **Value:** Paste your actual Groq API key
+   - **Environments:** Select "Production", "Preview", "Development"
+6. Click **Add** button
+7. Repeat for other variables:
+   - **`FRONTEND_URL`** = `https://your-frontend-url.vercel.app`
+   - **`NODE_ENV`** = `production`
+
+8. **Redeploy:** Click **Deployments** > Latest deploy > **Redeploy button**
+
+#### Where to Get Groq API Key
+
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign up or login
+3. Go to **API Keys**
+4. Click **Create API Key**
+5. Copy the key (looks like: `gsk_xxxxxxxxxxxxxxxx`)
+6. Paste in Vercel environment variables
+
+#### How to Create `.env` File Locally
+
+For local development, create a `.env` file (this file is ignored by Git):
+
+```bash
+# Create file
+echo "GROQ_API_KEY=gsk_your_key_here" > .env
+```
+
+Or manually create `.env`:
+
+```
+GROQ_API_KEY=gsk_your_actual_key_here
+FRONTEND_URL=http://localhost:3000
+NODE_ENV=development
+```
+
+**Important:** Never push `.env` to GitHub! It's in `.gitignore` - that's why!
+
+#### Access Environment Variables in Code
+
+In `server.js`:
+
+```javascript
+const groqKey = process.env.GROQ_API_KEY;
+const frontendUrl = process.env.FRONTEND_URL;
+
+console.log("Using API Key:", groqKey.substring(0, 10) + "..."); // Don't print full key!
+```
+
+#### Verify Variables Are Set
+
+After deploying, check logs:
+
+```bash
+vercel logs --tail
+```
+
+If you see errors about missing variables, check:
+
+1. Variable is added in Vercel Settings
+2. Spelled exactly the same (case-sensitive!)
+3. App was redeployed after adding
+
 4. Redeploy: Click **Deployments** > Latest > **Redeploy**
 
 ---
