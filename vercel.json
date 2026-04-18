@@ -1,0 +1,29 @@
+{
+  "name": "unimedia-backend",
+  "version": 2,
+  "public": false,
+  "buildCommand": "npm install",
+  "env": {
+    "GROQ_API_KEY": {
+      "description": "Your Groq API key from https://console.groq.com",
+      "required": true
+    },
+    "FRONTEND_URL": {
+      "description": "Your Vercel/Netlify frontend URL",
+      "required": false
+    },
+    "NODE_ENV": {
+      "default": "production"
+    }
+  },
+  "functions": {
+    "server.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "server.js" },
+    { "source": "/:path*", "destination": "server.js" }
+  ]
+}
