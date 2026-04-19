@@ -3282,8 +3282,8 @@
     const API_URL = (() => {
       // Production: Use backend URL from environment or window variable
       if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // For Vercel/Netlify frontend calling Glitch backend
-        return window.API_BASE_URL || 'https://unimedia-backend.glitch.me';
+        // For Vercel/Netlify frontend calling Railway backend
+        return window.API_BASE_URL || 'https://web-production-74db7.up.railway.app';
       }
       // Local development
       return 'http://localhost:3000';

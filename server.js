@@ -53,6 +53,7 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'https://unimedia-six.vercel.app',  // Main Vercel URL
   'https://unimedia-git-main-robertojrmediana-5093s-projects.vercel.app', // Preview URL
+  'https://web-production-74db7.up.railway.app', // Railway backend URL
   process.env.FRONTEND_URL, // Set in environment variables
 ].filter(Boolean); // Remove undefined values
 
