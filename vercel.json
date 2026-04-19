@@ -1,5 +1,9 @@
 {
   "name": "unimedia",
   "version": 2,
-  "public": true
+  "public": true,
+  "rewrites": [
+    { "source": "/", "destination": "/UniMedia_Web.html" },
+    { "source": "/(.*)", "destination": "/UniMedia_Web.html" }
+  ]
 }
