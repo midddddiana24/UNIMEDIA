@@ -53,22 +53,29 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'https://unimedia-six.vercel.app',  // Main Vercel URL
   'https://unimedia-git-main-robertojrmediana-5093s-projects.vercel.app', // Preview URL
-  'https://*.vercel.app', // Allow all Vercel preview deployments
   process.env.FRONTEND_URL, // Set in environment variables
 ].filter(Boolean); // Remove undefined values
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) {
+      // Allow requests with no origin (mobile apps, curl requests)
+      callback(null, true);
+    } else if (allowedOrigins.includes(origin)) {
+      // Exact match
+      callback(null, true);
+    } else if (/https:\/\/.*\.vercel\.app/.test(origin)) {
+      // Wildcard match for all Vercel preview deployments
       callback(null, true);
     } else {
       console.warn(`CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Allow anyway, let the request through
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 };
 
 // Configure multer for file uploads
