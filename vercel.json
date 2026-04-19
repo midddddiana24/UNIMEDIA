@@ -1,16 +1,5 @@
 {
-  "name": "unimedia-backend",
+  "name": "unimedia",
   "version": 2,
-  "public": false,
-  "buildCommand": "npm install",
-  "functions": {
-    "server.js": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
-  },
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "server.js" },
-    { "source": "/:path*", "destination": "server.js" }
-  ]
+  "public": true
 }
