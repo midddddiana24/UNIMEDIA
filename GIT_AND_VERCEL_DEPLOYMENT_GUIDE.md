@@ -244,110 +244,82 @@ Click **Deploy** and wait for build to complete.
 
 Your frontend will be live at: `https://unimedia-website.vercel.app`
 
-### Step 4: Custom Domain (Optional)
+---
 
-In Vercel dashboard:
+## 🎯 QUICK SETUP (Your Current Setup: Vercel + Railway)
 
-1. Go to your project settings
-2. Click **Domains**
-3. Add your custom domain (e.g., `unimedia.com`)
-4. Follow DNS configuration steps
+Since you already have a backend on Railway, here's your simplified workflow:
+
+### 1. Push Code to GitHub
+
+```bash
+git add .
+git commit -m "Your message"
+git push origin main
+```
+
+### 2. Deploy Frontend to Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import your GitHub repo: `midddddiana24/UNIMEDIA`
+3. Add environment variables:
+   - `GROQ_API_KEY` = Your Groq API key
+   - `REACT_APP_BACKEND_URL` = Your Railway backend URL
+   - `FRONTEND_URL` = `https://unimedia.vercel.app`
+4. Click **Deploy** - done! 🎉
+
+### 3. Future Updates
+
+Every time you push to GitHub, Vercel auto-deploys!
 
 ---
 
-## Part 4: Deploy Backend to GitHub & Host
+## Part 4: Backend Already Deployed on Railway ✅
 
-### Option A: Deploy Backend to Heroku (Recommended)
+Great! Your backend is already running on Railway. You just need to:
 
-#### Step 1: Create Heroku Account
+1. **Get your Railway backend URL** from your Railway dashboard
+2. **Add it to your Vercel environment variables** (see Step 5 below)
 
-- Go to [heroku.com](https://heroku.com/)
-- Sign up and verify email
+Your Railway backend URL looks like: `https://unimedia-backend-prod.railway.app` or similar.
 
-#### Step 2: Create Heroku App
+**To find your Railway URL:**
 
-```bash
-# Install Heroku CLI (if not already installed)
-# Then login:
-heroku login
-
-# Create new app
-heroku create unimedia-backend
-```
-
-#### Step 3: Configure Procfile
-
-Your `Procfile` should contain:
-
-```
-web: node server.js
-```
-
-#### Step 4: Set Environment Variables
-
-```bash
-heroku config:set NODE_ENV=production
-heroku config:set PORT=5000
-```
-
-#### Step 5: Deploy to Heroku
-
-```bash
-git push heroku main
-```
-
-Your backend will be live at: `https://unimedia-backend.herokuapp.com`
-
-#### Step 6: View Logs
-
-```bash
-heroku logs --tail
-```
-
----
-
-### Option B: Deploy Backend to Railway (Modern Alternative)
-
-#### Step 1: Create Railway Account
-
-- Go to [railway.app](https://railway.app/)
-- Sign up with GitHub
-
-#### Step 2: Create New Project
-
-1. Click **Create New Project**
-2. Select **Deploy from GitHub repo**
-3. Choose `UNIMEDIA_WEBSITE`
-4. Confirm deployment
-
-#### Step 3: Configure Service
-
-Railway auto-detects `server.js` and Node.js. Click on the service and:
-
-1. Go to **Variables**
-2. Add any environment variables needed
-3. Deployment starts automatically
-
-Your backend URL appears in the dashboard (e.g., `https://unimedia-backend-prod.railway.app`)
+1. Go to [railway.app](https://railway.app/)
+2. Login and select your project
+3. Click the **Deployments** tab
+4. Find the **URL** field - copy this URL
+5. You'll use this when setting up Vercel environment variables
 
 ---
 
 ## Part 5: Connect Frontend to Backend
 
-### Step 1: Update API URLs
+### Step 1: Connect to Your Railway Backend
 
-In your JavaScript files, change hardcoded URLs:
+Since your backend is already on Railway, you need to add the Railway URL to Vercel.
+
+**Get your Railway Backend URL:**
+
+1. Go to [railway.app](https://railway.app/)
+2. Login and select your UNIMEDIA project
+3. Click **Deployments** tab
+4. Copy the **URL** (e.g., `https://unimedia-backend-prod.railway.app`)
+
+**Update your code to use this URL:**
+
+In your JavaScript (frontend), change hardcoded URLs:
 
 **Before:**
 
 ```javascript
-fetch("http://localhost:5000/api/...");
+fetch("http://localhost:3000/api/...");
 ```
 
 **After:**
 
 ```javascript
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:3000";
 fetch(`${API_URL}/api/...`);
 ```
 
@@ -380,7 +352,8 @@ An environment variable is a "secret setting" your app uses. Examples:
    - **Environments:** Select "Production", "Preview", "Development"
 6. Click **Add** button
 7. Repeat for other variables:
-   - **`FRONTEND_URL`** = `https://your-frontend-url.vercel.app`
+   - **`REACT_APP_BACKEND_URL`** = `https://your-railway-backend.railway.app` (your Railway URL!)
+   - **`FRONTEND_URL`** = `https://unimedia.vercel.app` (your Vercel frontend URL)
    - **`NODE_ENV`** = `production`
 
 8. **Redeploy:** Click **Deployments** > Latest deploy > **Redeploy button**
@@ -514,13 +487,23 @@ vercel deploy                 # Deploy from terminal
 vercel --prod                 # Deploy to production
 ```
 
-### Heroku Commands
+### Heroku Commands (Not needed - you're using Railway!)
+
+If you ever use Heroku in the future:
 
 ```bash
 heroku logs --tail            # View live logs
 heroku restart                # Restart app
 heroku open                   # Open app in browser
 heroku config                 # View environment variables
+```
+
+### Railway Commands
+
+```bash
+# No CLI needed - manage everything from railway.app dashboard
+# View logs: railway.app → Project → Deployments → View Logs
+# Restart: railway.app → Project → Deployments → Redeploy
 ```
 
 ---
@@ -580,11 +563,11 @@ git push origin main
 
 ## Quick Deploy Summary
 
-| Component       | Platform       | URL                                                |
-| --------------- | -------------- | -------------------------------------------------- |
-| **Frontend**    | Vercel         | `https://unimedia-website.vercel.app`              |
-| **Backend**     | Heroku/Railway | `https://unimedia-backend.herokuapp.com`           |
-| **Source Code** | GitHub         | `https://github.com/yourusername/UNIMEDIA_WEBSITE` |
+| Component       | Platform | URL                                         |
+| --------------- | -------- | ------------------------------------------- |
+| **Frontend**    | Vercel   | `https://unimedia.vercel.app`               |
+| **Backend**     | Railway  | `https://your-railway-backend.railway.app`  |
+| **Source Code** | GitHub   | `https://github.com/midddddiana24/UNIMEDIA` |
 
 ---
 
