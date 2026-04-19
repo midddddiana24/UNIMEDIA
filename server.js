@@ -51,10 +51,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5000',
   'http://127.0.0.1:3000',
+  'https://unimedia-six.vercel.app',  // Your Vercel frontend URL
   process.env.FRONTEND_URL, // Set in environment variables
-  // Add your Vercel/Netlify frontend URL here
-  // 'https://your-app.vercel.app',
-  // 'https://your-app.netlify.app'
 ].filter(Boolean); // Remove undefined values
 
 const corsOptions = {
