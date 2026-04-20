@@ -5324,6 +5324,15 @@ ${text}`;
       }
     }
 
+    function playHistoryAudio(itemId, content) {
+      if (!content || content.trim().length === 0) {
+        showToast('No text to convert', 'warning');
+        return;
+      }
+      window._resultTTSText = content;
+      showResultTTSModal(content, 'history');
+    }
+
     function pauseQuickTTS() {
       if (window._quickTTSSynth && isTTSSpeaking) {
         window._quickTTSSynth.pause();
@@ -6437,7 +6446,7 @@ ${rawText}`;
               <button onclick="copyToClipboard('${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" class="btn btn-primary" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #000000; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
                 📋 Copy Content
               </button>
-              <button onclick="window._resultTTSText = '${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}'; showResultTTSModal(window._resultTTSText, 'history');" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
+              <button onclick="playHistoryAudio('${item.id}', '${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
                 🔊 Listen
               </button>
               <button onclick="if(confirm('Delete this item?')) { deleteHistoryItem(${item.id}); this.closest('div').parentElement.parentElement.remove(); }" style="width: 100%; padding: 10px; border: 1.5px solid var(--danger); border-radius: 8px; background: transparent; color: var(--danger); cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
