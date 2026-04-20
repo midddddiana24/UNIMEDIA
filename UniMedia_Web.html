@@ -5291,7 +5291,7 @@ ${text}`;
 
           <div id="ttsModalButtons" style="display: flex; gap: 10px; flex-direction: column; box-sizing: border-box;">
             <button onclick="closeResultTTSModal()" style="width: 100%; padding: 10px; background: var(--bg2); border: 1px solid var(--card-border); border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--text); transition: all 0.2s; font-size: 13px; box-sizing: border-box;">Cancel</button>
-            <button onclick="quickConvertToTTS('${toolType}')" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #4f46e5, #7c3aed); border: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">🔊 Generate</button>
+            <button onclick="quickConvertToTTS('${toolType}')" style="width: 100%; padding: 10px; background: #000000; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">🔊 Generate</button>
           </div>
 
           <div id="ttsPlaybackControls" style="display: none; margin-top: 20px;">
@@ -5299,7 +5299,7 @@ ${text}`;
             <div style="display: flex; gap: 8px; flex-direction: column; box-sizing: border-box;">
               <button onclick="pauseQuickTTS()" id="quickTTSPauseBtn" style="width: 100%; padding: 10px; background: var(--bg2); border: 1px solid var(--card-border); border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--text); transition: all 0.2s; font-size: 13px; box-sizing: border-box;">⏸ Pause</button>
               <button onclick="resumeQuickTTS()" id="quickTTSResumeBtn" style="display: none; width: 100%; padding: 10px; background: var(--bg2); border: 1px solid var(--card-border); border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--text); transition: all 0.2s; font-size: 13px; box-sizing: border-box;">▶️ Resume</button>
-              <button onclick="stopQuickTTS()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #ef4444, #dc2626); border: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">⏹️ Stop</button>
+              <button onclick="stopQuickTTS()" style="width: 100%; padding: 10px; background: #a4161a; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">⏹️ Stop</button>
               <button onclick="closeResultTTSModal()" style="width: 100%; padding: 10px; background: var(--bg2); border: 1px solid var(--card-border); border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--text); transition: all 0.2s; font-size: 13px; box-sizing: border-box;">Close</button>
             </div>
           </div>
@@ -6434,10 +6434,10 @@ ${rawText}`;
             </div>
 
             <div style="display: flex; gap: 10px; flex-direction: column; width: 100%; box-sizing: border-box;">
-              <button onclick="copyToClipboard('${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" class="btn btn-primary" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
+              <button onclick="copyToClipboard('${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" class="btn btn-primary" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #000000; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
                 📋 Copy Content
               </button>
-              <button onclick="window._resultTTSText = '${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}'; showResultTTSModal(window._resultTTSText, 'history');" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
+              <button onclick="window._resultTTSText = '${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}'; showResultTTSModal(window._resultTTSText, 'history');" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
                 🔊 Listen
               </button>
               <button onclick="if(confirm('Delete this item?')) { deleteHistoryItem(${item.id}); this.closest('div').parentElement.parentElement.remove(); }" style="width: 100%; padding: 10px; border: 1.5px solid var(--danger); border-radius: 8px; background: transparent; color: var(--danger); cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
