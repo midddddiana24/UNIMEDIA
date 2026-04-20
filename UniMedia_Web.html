@@ -1329,6 +1329,37 @@
       transition: all 0.3s ease;
     }
 
+    .password-input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px 8px;
+      font-size: 18px;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-password-btn:hover {
+      color: var(--accent);
+    }
+
+    .password-input-wrapper input[type="password"],
+    .password-input-wrapper input[type="text"] {
+      padding-right: 45px;
+    }
+
     .form-label:hover {
       color: var(--accent3);
     }
@@ -2354,7 +2385,10 @@
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required />
+          <div class="password-input-wrapper">
+            <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required />
+            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('loginPassword')">👁️</button>
+          </div>
         </div>
         <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
       </form>
@@ -2382,11 +2416,17 @@
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="signupPassword" placeholder="••••••••" minlength="6" required />
+          <div class="password-input-wrapper">
+            <input type="password" class="form-input" id="signupPassword" placeholder="••••••••" minlength="6" required />
+            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signupPassword')">👁️</button>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">Confirm Password</label>
-          <input type="password" class="form-input" id="signupConfirm" placeholder="••••••••" required />
+          <div class="password-input-wrapper">
+            <input type="password" class="form-input" id="signupConfirm" placeholder="••••••••" required />
+            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signupConfirm')">👁️</button>
+          </div>
         </div>
         <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
       </form>
@@ -3223,15 +3263,24 @@
       <div class="auth-error" id="changePwError"></div>
       <div class="form-group">
         <label class="form-label">Current Password</label>
-        <input type="password" id="currentPwInput" class="form-input" placeholder="••••••••" />
+        <div class="password-input-wrapper">
+          <input type="password" id="currentPwInput" class="form-input" placeholder="••••••••" />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('currentPwInput')">👁️</button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">New Password</label>
-        <input type="password" id="newPwInput" class="form-input" placeholder="••••••••" />
+        <div class="password-input-wrapper">
+          <input type="password" id="newPwInput" class="form-input" placeholder="••••••••" />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('newPwInput')">👁️</button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Confirm New Password</label>
-        <input type="password" id="confirmPwInput" class="form-input" placeholder="••••••••" />
+        <div class="password-input-wrapper">
+          <input type="password" id="confirmPwInput" class="form-input" placeholder="••••••••" />
+          <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('confirmPwInput')">👁️</button>
+        </div>
       </div>
       <button class="btn btn-primary" style="width:100%;" onclick="doChangePassword()">Update Password</button>
     </div>
@@ -3449,6 +3498,20 @@
       } catch (error) {
         errorEl.textContent = '❌ Error creating account';
         errorEl.classList.add('show');
+      }
+    }
+
+    // Toggle password visibility with eye icon
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const button = event.target.closest('.toggle-password-btn');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = '👁️‍🗨️'; // Eye with mouth (showing)
+      } else {
+        input.type = 'password';
+        button.textContent = '👁️'; // Eye (hidden)
       }
     }
 
