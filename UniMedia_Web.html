@@ -467,15 +467,17 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1.5px solid #e0e0e0;
-      padding: 14px 24px;
-      height: auto;
+      padding: 0 16px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       animation: slideInDown 0.5s ease;
-      flex-wrap: wrap;
-      gap: 12px;
+      gap: 0;
+    }
+    @media (min-width: 768px) {
+      nav.top-nav { padding: 0 24px; height: 64px; }
     }
 
     .nav-brand {
@@ -537,12 +539,15 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 5px 10px;
+      padding: 5px;
       background: #f5f5f5;
       border: 1px solid #e0e0e0;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
+    }
+    @media (min-width: 640px) {
+      .nav-user { padding: 5px 10px; }
     }
 
     .nav-user:hover {
@@ -576,15 +581,22 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--text);
+      display: none;
     }
 
     .nav-user-status {
       font-size: 10px;
       color: var(--success);
+      display: none;
+    }
+
+    @media (min-width: 640px) {
+      .nav-user-name { display: block; }
+      .nav-user-status { display: block; }
     }
 
     .nav-link {
-      display: none;
+      display: inline-flex;
       padding: 8px 14px;
       background: transparent;
       color: var(--text2);
@@ -595,6 +607,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       position: relative;
+      font-family: 'DM Sans', sans-serif;
     }
     
     .nav-link::after {
@@ -693,8 +706,7 @@
     /* ══════════════════════════════════════════════════════════════ */
     main {
       flex: 1;
-      padding: 20px 16px;
-      padding-bottom: calc(var(--bottom-nav-height) + 24px);
+      padding: 20px 16px 40px;
       width: 100%;
       max-width: 1400px;
       margin: 0 auto;
@@ -940,47 +952,75 @@
       transform: translateY(-4px);
     }
 
-    /* Responsive grid – Mobile first approach */
+    /* ═══════════════════════════════════════════════════════════════ */
+    /* BENTO GRID LAYOUT - RESPONSIVE & ADAPTIVE */
+    /* ═══════════════════════════════════════════════════════════════ */
+    
+    /* Mobile Bento Grid (2x2 - Simple & Clean) */
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 14px;
       width: 100%;
       max-width: 100%;
-      grid-auto-rows: minmax(160px, auto);
+      grid-auto-rows: auto;
     }
 
-    /* Bento Grid: Responsive Card Sizes */
+    /* Mobile: All cards uniform size (2x2 layout) */
     .grid .tool-card {
       grid-column: span 1;
       grid-row: span 1;
-      min-height: 160px;
+      min-height: 150px;
     }
 
+    /* Tablet Bento Grid (2x3 layout) */
     @media (min-width: 640px) {
       .grid { 
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        grid-auto-rows: minmax(180px, auto);
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
       }
       
       .grid .tool-card {
-        min-height: 180px;
+        min-height: 160px;
       }
     }
 
+    /* Medium Tablet (3x2 layout) */
+    @media (min-width: 768px) {
+      .grid { 
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      
+      .grid .tool-card {
+        min-height: 155px;
+      }
+    }
+
+    /* Desktop Bento Grid (3x2 with some variety) */
     @media (min-width: 1024px) {
       .grid { 
-        grid-template-columns: repeat(6, 1fr);
-        gap: 24px;
-        grid-auto-rows: minmax(200px, auto);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
       }
 
       .grid .tool-card {
-        min-height: 200px;
+        min-height: 170px;
+      }
+    }
+
+    /* Large Desktop (6 column layout with varied sizes) */
+    @media (min-width: 1440px) {
+      .grid { 
+        grid-template-columns: repeat(6, 1fr);
+        gap: 24px;
       }
 
-      /* Bento box varied sizes on desktop */
+      .grid .tool-card {
+        min-height: 180px;
+      }
+
+      /* Bento box varied sizes on large desktop */
       .grid .tool-card:nth-child(1) {
         grid-column: span 2;
         grid-row: span 1;
@@ -1469,12 +1509,12 @@
       }
     }
 
-    /* ─── Tool Cards (Mobile App Style) ─── */
+    /* ─── Tool Cards (Mobile App Style with Bento Adaptation) ─── */
     .tool-card {
       background: var(--card);
       border: 1.5px solid #e0e0e0;
       border-radius: var(--radius);
-      padding: 28px 20px;
+      padding: 24px 16px;
       text-align: center;
       cursor: pointer;
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1486,7 +1526,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* Premium top accent line */
@@ -1544,16 +1584,16 @@
     }
 
     .tool-icon {
-      font-size: 40px;
-      width: 68px;
-      height: 68px;
+      font-size: 36px;
+      width: 60px;
+      height: 60px;
       background: #f5f5f5;
       border: 1px solid #e0e0e0;
-      border-radius: 14px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 12px auto 10px;
+      margin: 6px auto 4px;
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       z-index: 1;
@@ -1568,14 +1608,32 @@
     
     @media (min-width: 640px) {
       .tool-icon {
-        font-size: 44px;
-        width: 76px;
-        height: 76px;
-        margin: 14px auto 12px;
+        font-size: 38px;
+        width: 64px;
+        height: 64px;
+        margin: 8px auto 8px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .tool-icon {
+        font-size: 40px;
+        width: 68px;
+        height: 68px;
+        margin: 10px auto 10px;
       }
     }
 
     @media (min-width: 1024px) {
+      .tool-icon {
+        font-size: 44px;
+        width: 76px;
+        height: 76px;
+        margin: 12px auto 12px;
+      }
+    }
+
+    @media (min-width: 1440px) {
       .tool-icon {
         font-size: 48px;
         width: 84px;
@@ -1591,38 +1649,70 @@
     }
 
     .tool-card h3 {
-      font-size: 0.96rem;
-      margin: 0 0 6px 0;
+      font-size: 0.93rem;
+      margin: 0 0 4px 0;
       color: var(--text);
       font-weight: 750;
-      padding: 0 8px;
+      padding: 0 6px;
       position: relative;
       z-index: 1;
       letter-spacing: -0.2px;
+      line-height: 1.3;
     }
     
     @media (min-width: 640px) {
       .tool-card h3 {
-        font-size: 1.02rem;
+        font-size: 0.96rem;
+        margin: 0 0 5px 0;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .tool-card h3 {
+        font-size: 1rem;
+        margin: 0 0 5px 0;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .tool-card h3 {
+        font-size: 1.05rem;
+        margin: 0 0 6px 0;
       }
     }
 
     .tool-card p {
       color: var(--text2);
-      font-size: 13px;
-      line-height: 1.5;
-      padding: 0 8px 12px;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 0 4px;
       margin: 0;
       position: relative;
       z-index: 1;
       font-weight: 500;
     }
-    
+
     @media (min-width: 640px) {
       .tool-card p {
-        font-size: 13.5px;
-        padding: 0 10px 14px;
+        font-size: 12.5px;
+        padding: 0 6px;
+        line-height: 1.45;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .tool-card p {
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 0 8px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .tool-card p {
+        font-size: 13px;
         line-height: 1.55;
+        padding: 0 10px 8px;
       }
     }
 
@@ -1671,7 +1761,7 @@
     /* ══════════════════════════════════════════════════════════════ */
     .toast {
       position: fixed;
-      bottom: calc(var(--bottom-nav-height) + 12px);
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
@@ -1868,32 +1958,15 @@
     /* RESPONSIVE — MOBILE FIRST                                    */
     /* ══════════════════════════════════════════════════════════════ */
 
-    @media (min-width: 640px) {
-      .nav-user-name, .nav-user-status {
-        display: block;
-      }
+    /* ── Mobile Bottom Navigation Bar — HIDDEN ── */
+    .mobile-bottom-nav {
+      display: none !important;
     }
 
-    /* ── Mobile Bottom Navigation Bar ── */
-    .mobile-bottom-nav {
-      display: flex !important;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: var(--bottom-nav-height);
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1.5px solid #e0e0e0;
-      z-index: 200;
-      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
-      animation: slideInUp 0.4s ease;
-    }
 
     /* ── Hamburger Button (mobile only) ── */
     .hamburger-btn {
-      display: none;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -1964,14 +2037,39 @@
       }
     }
 
-    /* Sidebar Overlay - hidden (not needed, using desktop-sidebar) */
+    /* Sidebar Overlay */
     .sidebar-overlay {
-      display: none !important;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 299;
+    }
+    .sidebar-overlay.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
     }
 
-    /* ── Old Sidebar Drawer – hidden (replaced by desktop-sidebar) ── */
+    /* ── Sidebar Drawer – slides in from left ── */
     .sidebar {
-      display: none !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: min(300px, 85vw);
+      height: 100%;
+      background: #ffffff;
+      border-right: 1.5px solid #e0e0e0;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+    .sidebar.open {
+      transform: translateX(0);
     }
 
     .sidebar-header {
@@ -2079,8 +2177,10 @@
     }
     .sidebar-logout:hover { background: rgba(239,68,68,0.1); }
 
-    /* hamburger hidden; navigation handled by sidebar or bottom-nav */
-    .hamburger-btn { display: none !important; }
+    /* Hamburger: visible on mobile, hidden on desktop */
+    @media (min-width: 768px) {
+      .hamburger-btn { display: none !important; }
+    }
 
     /* ══════════════════════════════════════════════════════════════ */
     /* RECORDING INDICATOR */
@@ -3248,24 +3348,6 @@
     </main>
 
     <!-- MOBILE BOTTOM NAVIGATION -->
-    <div class="mobile-bottom-nav" id="mobileBottomNav" style="display: flex; justify-content: space-around; align-items: center; padding-bottom: 8px;">
-      <button onclick="showPage('home')" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; border: none; background: none; cursor: pointer; color: var(--text2); font-size: 11px; transition: var(--transition);" class="mobile-nav-btn">
-        <span style="font-size: 20px;">🏠</span>
-        <span>Home</span>
-      </button>
-      <button onclick="showPage('tools')" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; border: none; background: none; cursor: pointer; color: var(--text2); font-size: 11px; transition: var(--transition);" class="mobile-nav-btn">
-        <span style="font-size: 20px;">🛠️</span>
-        <span>Tools</span>
-      </button>
-      <button onclick="showPage('history')" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; border: none; background: none; cursor: pointer; color: var(--text2); font-size: 11px; transition: var(--transition);" class="mobile-nav-btn">
-        <span style="font-size: 20px;">📂</span>
-        <span>History</span>
-      </button>
-      <button onclick="showPage('profile')" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; border: none; background: none; cursor: pointer; color: var(--text2); font-size: 11px; transition: var(--transition);" class="mobile-nav-btn">
-        <span style="font-size: 20px;">👤</span>
-        <span>Profile</span>
-      </button>
-    </div>
 
   </div>
 
@@ -3688,7 +3770,17 @@
         loadAndDisplayHistory();
       }
 
+      syncBottomNav(pageId);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function syncBottomNav(pageId) {
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => btn.classList.remove('active-nav-btn'));
+      const map = { home: 0, tools: 1, history: 2, profile: 3 };
+      const btns = document.querySelectorAll('.mobile-nav-btn');
+      if (map[pageId] !== undefined && btns[map[pageId]]) {
+        btns[map[pageId]].classList.add('active-nav-btn');
+      }
     }
 
     function openTool(tool) {
@@ -5251,7 +5343,7 @@ ${text}`;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 9500;
         animation: fadeIn 0.2s ease;
         padding: ${isMobile ? '12px' : '20px'};
         overflow-y: auto;
@@ -5992,8 +6084,6 @@ Report generated by UniMedia AI Platform
         theme: 'dark'
       };
 
-      applyTheme('dark');
-      
       showToast('✅ Settings reset to defaults', 'success');
       saveAdvancedSettings();
     }
@@ -6210,9 +6300,7 @@ ${rawText}`;
       if (saved) {
         try {
           advancedSettings = { ...advancedSettings, ...JSON.parse(saved) };
-          // Apply saved theme
-          if (advancedSettings.theme) applyTheme(advancedSettings.theme);
-          // Restore UI values if the modal is present
+          // Note: applyTheme not used in this build
           const quality = document.getElementById('processingQuality');
           if (quality) quality.value = advancedSettings.quality || 'balanced';
           const tokens = document.getElementById('maxTokens');
@@ -6367,6 +6455,9 @@ ${rawText}`;
       `).join('');
     }
 
+    // Cache for history item content — avoids broken inline onclick strings
+    window._historyContentCache = {};
+
     function viewHistoryDetail(itemId) {
       try {
         const transaction = db.transaction(['history'], 'readonly');
@@ -6375,94 +6466,111 @@ ${rawText}`;
 
         request.onsuccess = () => {
           const item = request.result;
-          if (!item) {
-            showToast('Item not found', 'error');
-            return;
-          }
+          if (!item) { showToast('Item not found', 'error'); return; }
 
-          // Create a modal to show the history item details
+          // Store content safely in memory — no inline string injection
+          window._historyContentCache[item.id] = item.content || '';
+
+          const isMobile = window.innerWidth < 640;
+          const modalId = 'historyDetailModal_' + item.id;
+
+          // Remove any existing modal with same id
+          const existing = document.getElementById(modalId);
+          if (existing) existing.remove();
+
           const modal = document.createElement('div');
+          modal.id = modalId;
           modal.style.cssText = `
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
             z-index: 5000; display: flex; align-items: center; justify-content: center;
-            padding: 16px;
-            overflow-y: auto;
+            padding: ${isMobile ? '12px' : '16px'}; overflow-y: auto;
           `;
 
           const card = document.createElement('div');
           card.style.cssText = `
             background: var(--card); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 20px; max-width: 600px; width: 100%;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border-radius: 16px; padding: ${isMobile ? '16px' : '20px'};
+            max-width: 600px; width: 100%;
+            max-height: ${isMobile ? '95vh' : '90vh'};
+            overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             box-sizing: border-box;
           `;
-          
-          // Mobile responsive adjustments
-          if (window.innerWidth < 640) {
-            card.style.padding = '16px';
-            card.style.maxHeight = '95vh';
-            modal.style.padding = '12px';
-          }
 
-          const contentPreview = item.content && item.content.length > 500 
+          const contentPreview = item.content && item.content.length > 500
             ? item.content.substring(0, 500) + '...'
             : item.content || 'No content';
 
+          // Escape for safe HTML display only (not for onclick)
+          const safePreview = contentPreview
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
           card.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: ${window.innerWidth < 640 ? '16px' : '24px'}; gap: 12px;">
-              <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
-                <div style="font-size: ${window.innerWidth < 640 ? '32px' : '40px'}; flex-shrink: 0; line-height: 1;">${getToolIcon(item.type)}</div>
-                <div style="min-width: 0; flex: 1;">
-                  <h2 style="margin: 0 0 4px 0; font-size: ${window.innerWidth < 640 ? '1.1rem' : '1.3rem'}; color: var(--text); word-break: break-word; line-height: 1.2;">${item.title || 'Untitled'}</h2>
-                  <p style="margin: 0; font-size: 12px; color: var(--text3);">${formatDate(item.timestamp)}</p>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:${isMobile?'16px':'20px'};gap:12px;">
+              <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;">
+                <div style="font-size:${isMobile?'28px':'36px'};flex-shrink:0;line-height:1;">${getToolIcon(item.type)}</div>
+                <div style="min-width:0;flex:1;">
+                  <h2 style="margin:0 0 4px 0;font-size:${isMobile?'1rem':'1.2rem'};color:var(--text);word-break:break-word;line-height:1.3;">${item.title || 'Untitled'}</h2>
+                  <p style="margin:0;font-size:12px;color:var(--text3);">${formatDate(item.timestamp)}</p>
                 </div>
               </div>
-              <button onclick="this.closest('div').parentElement.parentElement.remove()" style="
-                width: 32px; height: 32px; border: none; background: var(--bg2);
-                border-radius: 8px; cursor: pointer; font-size: 18px; color: var(--text2);
-                transition: all 0.2s; flex-shrink: 0; padding: 0; display: flex; align-items: center; justify-content: center;
-              ">×</button>
+              <button id="closeBtn_${item.id}" style="width:32px;height:32px;border:none;background:var(--bg2);border-radius:8px;cursor:pointer;font-size:18px;color:var(--text2);flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;">×</button>
             </div>
 
-            <div style="margin-bottom: ${window.innerWidth < 640 ? '16px' : '24px'}; min-width: 0;">
-              <div style="background: var(--bg2); padding: ${window.innerWidth < 640 ? '12px' : '16px'}; border-radius: 12px; border: 1px solid var(--card-border); line-height: 1.5; overflow: hidden;">
-                <p style="margin: 0; font-size: 12px; color: var(--text2); white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">${contentPreview}</p>
+            <div style="margin-bottom:${isMobile?'14px':'20px'};min-width:0;">
+              <div style="background:var(--bg2);padding:${isMobile?'12px':'14px'};border-radius:12px;border:1px solid var(--card-border);line-height:1.5;overflow:hidden;">
+                <p style="margin:0;font-size:12px;color:var(--text2);white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;">${safePreview}</p>
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: ${window.innerWidth < 640 ? '10px' : '12px'}; margin-bottom: ${window.innerWidth < 640 ? '16px' : '24px'};">
-              <div style="padding: ${window.innerWidth < 640 ? '12px' : '14px'}; background: var(--bg2); border-radius: 8px; border: 1px solid var(--card-border); min-width: 0;">
-                <p style="margin: 0 0 4px 0; font-size: 10px; color: var(--text3); text-transform: uppercase; font-weight: 600;">Type</p>
-                <p style="margin: 0; font-size: 12px; font-weight: 500; color: var(--text); word-break: break-word;">${item.type}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:${isMobile?'10px':'12px'};margin-bottom:${isMobile?'14px':'20px'};">
+              <div style="padding:${isMobile?'10px':'12px'};background:var(--bg2);border-radius:8px;border:1px solid var(--card-border);min-width:0;">
+                <p style="margin:0 0 3px 0;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:600;">Type</p>
+                <p style="margin:0;font-size:12px;font-weight:500;color:var(--text);word-break:break-word;">${item.type}</p>
               </div>
-              <div style="padding: ${window.innerWidth < 640 ? '12px' : '14px'}; background: var(--bg2); border-radius: 8px; border: 1px solid var(--card-border); min-width: 0;">
-                <p style="margin: 0 0 4px 0; font-size: 10px; color: var(--text3); text-transform: uppercase; font-weight: 600;">Date</p>
-                <p style="margin: 0; font-size: 12px; font-weight: 500; color: var(--text);">${new Date(item.timestamp).toLocaleDateString()}</p>
+              <div style="padding:${isMobile?'10px':'12px'};background:var(--bg2);border-radius:8px;border:1px solid var(--card-border);min-width:0;">
+                <p style="margin:0 0 3px 0;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:600;">Date</p>
+                <p style="margin:0;font-size:12px;font-weight:500;color:var(--text);">${new Date(item.timestamp).toLocaleDateString()}</p>
               </div>
             </div>
 
-            <div style="display: flex; gap: 10px; flex-direction: column; width: 100%; box-sizing: border-box;">
-              <button onclick="copyToClipboard('${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" class="btn btn-primary" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #000000; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
-                📋 Copy Content
-              </button>
-              <button onclick="playHistoryAudio('${item.id}', '${item.content.replace(/'/g, "\\'").replace(/"/g, '\\"')}')" style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
-                🔊 Listen
-              </button>
-              <button onclick="if(confirm('Delete this item?')) { deleteHistoryItem(${item.id}); this.closest('div').parentElement.parentElement.remove(); }" style="width: 100%; padding: 10px; border: 1.5px solid var(--danger); border-radius: 8px; background: transparent; color: var(--danger); cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 13px; box-sizing: border-box;">
-                🗑️ Delete
-              </button>
+            <div style="display:flex;gap:10px;flex-direction:column;width:100%;box-sizing:border-box;">
+              <button id="copyBtn_${item.id}" style="width:100%;padding:11px;border:none;border-radius:8px;background:#000000;color:white;cursor:pointer;font-weight:600;font-size:13px;box-sizing:border-box;">📋 Copy Content</button>
+              <button id="listenBtn_${item.id}" style="width:100%;padding:11px;border:none;border-radius:8px;background:#2d6a4f;color:white;cursor:pointer;font-weight:600;font-size:13px;box-sizing:border-box;">🔊 Listen</button>
+              <button id="deleteBtn_${item.id}" style="width:100%;padding:11px;border:1.5px solid var(--danger);border-radius:8px;background:transparent;color:var(--danger);cursor:pointer;font-weight:600;font-size:13px;box-sizing:border-box;">🗑️ Delete</button>
             </div>
           `;
 
           modal.appendChild(card);
-          modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
           document.body.appendChild(modal);
+
+          // Attach event listeners AFTER DOM insertion — no inline onclick needed
+          const closeModal = () => modal.remove();
+
+          document.getElementById('closeBtn_' + item.id).addEventListener('click', closeModal);
+          modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+          document.getElementById('copyBtn_' + item.id).addEventListener('click', () => {
+            const content = window._historyContentCache[item.id] || '';
+            copyToClipboard(content);
+            closeModal();
+          });
+
+          document.getElementById('listenBtn_' + item.id).addEventListener('click', () => {
+            const content = window._historyContentCache[item.id] || '';
+            if (!content.trim()) { showToast('No text to read', 'warning'); return; }
+            showResultTTSModal(content, 'history');
+          });
+
+          document.getElementById('deleteBtn_' + item.id).addEventListener('click', () => {
+            if (confirm('Delete this item?')) {
+              deleteHistoryItem(item.id);
+              closeModal();
+            }
+          });
         };
 
-        request.onerror = () => {
-          showToast('Error loading item details', 'error');
-        };
+        request.onerror = () => { showToast('Error loading item details', 'error'); };
       } catch (error) {
         console.error('Error viewing history detail:', error);
         showToast('Error loading item: ' + error.message, 'error');
@@ -6563,6 +6671,15 @@ ${rawText}`;
 
     // Initialize the app
     window.addEventListener('load', async () => {
+      // Hard failsafe — if init takes more than 6s, force-show auth anyway
+      const splashTimeout = setTimeout(() => {
+        const splash = document.getElementById('splash');
+        if (splash && !splash.classList.contains('hide')) {
+          console.warn('Splash failsafe triggered');
+          showAuth();
+        }
+      }, 6000);
+
       setTimeout(async () => {
         try {
           await initDatabase();
@@ -6572,15 +6689,19 @@ ${rawText}`;
             const user = await getUser(savedEmail);
             if (user) {
               currentUser = user;
+              clearTimeout(splashTimeout);
               showApp();
               return;
             }
           }
 
+          clearTimeout(splashTimeout);
           showAuth();
         } catch (error) {
           console.error('Init error:', error);
-          showToast('Error initializing app', 'error');
+          clearTimeout(splashTimeout);
+          showAuth(); // Always hide splash and show auth, even on error
+          showToast('Error initializing app — please refresh', 'error');
         }
       }, 2500);
     });
