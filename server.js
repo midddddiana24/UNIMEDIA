@@ -5,6 +5,9 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const sharp = require('sharp');
+const { PDFParse } = require('pdf-parse');
+const mammoth = require('mammoth');
+const JSZip = require('jszip');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
@@ -326,9 +329,23 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
     try {
       // Extract text based on file format
       if (fileExtension === 'pdf') {
-        const pdf = require('pdf-parse');
-        const data = await pdf(documentFile.buffer);
-        extractedText = data.text || '';
+        console.log('📄 Attempting to parse PDF file with PDFParse v2...');
+        console.log('   - Buffer size:', documentFile.buffer.length, 'bytes');
+        console.log('   - Buffer is Buffer object:', Buffer.isBuffer(documentFile.buffer));
+        
+        try {
+          const parser = new PDFParse({ data: documentFile.buffer });
+          const result = await parser.getText();
+          extractedText = result.text || '';
+          await parser.destroy();
+          console.log(`✓ PDF parsed successfully, extracted ${extractedText.length} characters`);
+        } catch (pdfError) {
+          console.error('❌ PDF parsing failed with error:', pdfError.message);
+          console.error('   Error code:', pdfError.code);
+          console.error('   Error name:', pdfError.name);
+          console.error('   Full error:', pdfError);
+          throw pdfError;
+        }
         
         // Check if PDF is image-based (scanned) - text extraction returned empty/minimal text
         if (!extractedText || extractedText.trim().length < 50) {
@@ -344,9 +361,9 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
       } 
       else if (fileExtension === 'docx' || fileExtension === 'doc') {
         // Use mammoth for DOCX and DOC files
-        const mammoth = require('mammoth');
         const result = await mammoth.extractRawText({ buffer: documentFile.buffer });
         extractedText = result.value || '';
+        console.log(`✓ ${fileExtension.toUpperCase()} parsed successfully, extracted ${extractedText.length} characters`);
       } 
       else if (fileExtension === 'txt') {
         // For text files, just decode the buffer
@@ -354,7 +371,6 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
       } 
       else if (fileExtension === 'odt') {
         // For ODT files (OpenDocument Text), extract from ZIP
-        const JSZip = require('jszip');
         const zip = new JSZip();
         await zip.loadAsync(documentFile.buffer);
         
@@ -367,6 +383,7 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
             .replace(/&nbsp;/g, ' ')
             .replace(/&#[\d]+;/g, ' ')
             .trim();
+          console.log(`✓ ODT parsed successfully, extracted ${extractedText.length} characters`);
         } else {
           throw new Error('Could not find content.xml in ODT file');
         }
@@ -378,7 +395,8 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
         });
       }
     } catch (extractError) {
-      console.error(`Text extraction error for ${fileExtension}:`, extractError.message);
+      console.error(`❌ Text extraction error for ${fileExtension}:`, extractError.message);
+      console.error('Stack trace:', extractError.stack);
       
       // Provide more specific error messages
       let userMessage = `⚠️ Error: Could not extract text from this ${fileExtension.toUpperCase()} file.`;
@@ -1004,9 +1022,10 @@ app.post('/api/pdf', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'API key required', text: '⚠️ Error: Groq API key not provided in Settings.' });
     }
 
-    const pdfParse = require('pdf-parse');
-    const data = await pdfParse(pdfFile.buffer);
-    const extractedText = data.text || '';
+    const parser = new PDFParse({ data: pdfFile.buffer });
+    const result = await parser.getText();
+    const extractedText = result.text || '';
+    await parser.destroy();
 
     if (!extractedText.trim()) {
       return res.json({ text: '⚠️ Could not extract text. The PDF might be scanned or image-based.', source: 'info' });

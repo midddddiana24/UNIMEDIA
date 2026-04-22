@@ -1,6 +1,6 @@
 # 🚀 Git & Vercel Deployment Guide for UniMedia
 
-Complete step-by-step instructions for version control with Git, deploying frontend to Vercel, and backend to GitHub/Heroku.
+Complete step-by-step instructions for version control with Git and deploying your static site to Vercel.
 
 ---
 
@@ -200,7 +200,9 @@ This uploads your code to GitHub's `main` branch.
 
 ---
 
-## Part 3: Deploy Frontend to Vercel
+## Part 3: Deploy Frontend to Vercel (Static Site)
+
+Your site is a static HTML file that doesn't need a backend server.
 
 ### Step 1: Create Vercel Account & Link Project
 
@@ -209,46 +211,36 @@ This uploads your code to GitHub's `main` branch.
 3. Click **Add New... > Project**
 4. Click **Import Git Repository**
 5. Select your GitHub account
-6. Find `UNIMEDIA_WEBSITE` repository
+6. Find `UNIMEDIA` repository
 7. Click **Import**
 
 ### Step 2: Configure Vercel Deployment
 
 When Vercel asks for settings:
 
-**Project Name:** `unimedia-website` (or preferred name)
+**Project Name:** `unimedia` (or preferred name)
 
-**Framework Preset:** Select `Other` (since you have custom setup)
+**Framework Preset:** Select `Other`
 
 **Root Directory:** Leave blank (default)
 
-**Build Command:**
-
-```
-npm run build
-```
-
-(If you don't have this, use: `npm install`)
+**Build Command:** Leave blank (not needed for static files)
 
 **Output Directory:** Leave blank
 
-**Environment Variables:** (Add if needed)
-
-```
-API_URL = https://your-backend-url.com
-```
+**Environment Variables:** None needed
 
 ### Step 3: Deploy
 
 Click **Deploy** and wait for build to complete.
 
-Your frontend will be live at: `https://unimedia-website.vercel.app`
+Your site will be live at: `https://unimedia.vercel.app` ✅
 
 ---
 
-## 🎯 QUICK SETUP (Your Current Setup: Vercel + Railway)
+## 🎯 QUICK SETUP (Static Site Deployment)
 
-Since you already have a backend on Railway, here's your simplified workflow:
+Since this is a static example site, here's your simplified workflow:
 
 ### 1. Push Code to GitHub
 
@@ -262,11 +254,7 @@ git push origin main
 
 1. Go to [vercel.com/new](https://vercel.com/new)
 2. Import your GitHub repo: `midddddiana24/UNIMEDIA`
-3. Add environment variables:
-   - `GROQ_API_KEY` = Your Groq API key
-   - `REACT_APP_BACKEND_URL` = Your Railway backend URL
-   - `FRONTEND_URL` = `https://unimedia.vercel.app`
-4. Click **Deploy** - done! 🎉
+3. Click **Deploy** - done! 🎉
 
 ### 3. Future Updates
 
@@ -274,148 +262,18 @@ Every time you push to GitHub, Vercel auto-deploys!
 
 ---
 
-## Part 4: Backend Already Deployed on Railway ✅
+## Part 4: What's Next?
 
-Great! Your backend is already running on Railway. You just need to:
+Your site is now live! You can:
 
-1. **Get your Railway backend URL** from your Railway dashboard
-2. **Add it to your Vercel environment variables** (see Step 5 below)
-
-Your Railway backend URL looks like: `https://unimedia-backend-prod.railway.app` or similar.
-
-**To find your Railway URL:**
-
-1. Go to [railway.app](https://railway.app/)
-2. Login and select your project
-3. Click the **Deployments** tab
-4. Find the **URL** field - copy this URL
-5. You'll use this when setting up Vercel environment variables
+- 📱 Share your Vercel URL with others
+- 🎨 Make changes locally and push to GitHub
+- 🚀 Vercel automatically deploys on every push
+- 🔧 Add custom domain in Vercel Settings → Domains
 
 ---
 
-## Part 5: Connect Frontend to Backend
-
-### Step 1: Connect to Your Railway Backend
-
-Since your backend is already on Railway, you need to add the Railway URL to Vercel.
-
-**Get your Railway Backend URL:**
-
-1. Go to [railway.app](https://railway.app/)
-2. Login and select your UNIMEDIA project
-3. Click **Deployments** tab
-4. Copy the **URL** (e.g., `https://unimedia-backend-prod.railway.app`)
-
-**Update your code to use this URL:**
-
-In your JavaScript (frontend), change hardcoded URLs:
-
-**Before:**
-
-```javascript
-fetch("http://localhost:3000/api/...");
-```
-
-**After:**
-
-```javascript
-const API_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:3000";
-fetch(`${API_URL}/api/...`);
-```
-
-### Step 2: Add Environment Variable to Vercel
-
-Environment variables are settings that your app needs to run (like API keys).
-
-#### What is an Environment Variable?
-
-An environment variable is a "secret setting" your app uses. Examples:
-
-- **`GROQ_API_KEY`** - Your Groq AI API key (for speech-to-text, summarization)
-- **`FRONTEND_URL`** - Your frontend website URL (for security)
-- **`NODE_ENV`** - Set to "production" or "development"
-
-**Why not just put them in code?**
-
-- ❌ If you push API keys to GitHub, hackers can use them!
-- ✅ Environment variables keep secrets safe and hidden
-
-#### How to Add Environment Variables to Vercel
-
-1. In Vercel dashboard, go to your project
-2. Click **Settings** (top menu)
-3. Click **Environment Variables** (left sidebar)
-4. Click **Add New** button
-5. Fill in:
-   - **Name:** `GROQ_API_KEY`
-   - **Value:** Paste your actual Groq API key
-   - **Environments:** Select "Production", "Preview", "Development"
-6. Click **Add** button
-7. Repeat for other variables:
-   - **`REACT_APP_BACKEND_URL`** = `https://your-railway-backend.railway.app` (your Railway URL!)
-   - **`FRONTEND_URL`** = `https://unimedia.vercel.app` (your Vercel frontend URL)
-   - **`NODE_ENV`** = `production`
-
-8. **Redeploy:** Click **Deployments** > Latest deploy > **Redeploy button**
-
-#### Where to Get Groq API Key
-
-1. Go to [console.groq.com](https://console.groq.com)
-2. Sign up or login
-3. Go to **API Keys**
-4. Click **Create API Key**
-5. Copy the key (looks like: `gsk_xxxxxxxxxxxxxxxx`)
-6. Paste in Vercel environment variables
-
-#### How to Create `.env` File Locally
-
-For local development, create a `.env` file (this file is ignored by Git):
-
-```bash
-# Create file
-echo "GROQ_API_KEY=gsk_your_key_here" > .env
-```
-
-Or manually create `.env`:
-
-```
-GROQ_API_KEY=gsk_your_actual_key_here
-FRONTEND_URL=http://localhost:3000
-NODE_ENV=development
-```
-
-**Important:** Never push `.env` to GitHub! It's in `.gitignore` - that's why!
-
-#### Access Environment Variables in Code
-
-In `server.js`:
-
-```javascript
-const groqKey = process.env.GROQ_API_KEY;
-const frontendUrl = process.env.FRONTEND_URL;
-
-console.log("Using API Key:", groqKey.substring(0, 10) + "..."); // Don't print full key!
-```
-
-#### Verify Variables Are Set
-
-After deploying, check logs:
-
-```bash
-vercel logs --tail
-```
-
-If you see errors about missing variables, check:
-
-1. Variable is added in Vercel Settings
-2. Spelled exactly the same (case-sensitive!)
-3. App was redeployed after adding
-
-4. Redeploy: Click **Deployments** > Latest > **Redeploy**
-
----
-
-## Part 6: Git Workflow (Ongoing Development)
+## Part 5: Git Workflow (Ongoing Development)
 
 ### Making Changes
 
@@ -451,21 +309,17 @@ git pull origin main
 
 ---
 
-## Part 7: Deployment Checklist
+## Part 6: Deployment Checklist
 
 - [ ] Git repository created and pushed to GitHub
 - [ ] `.gitignore` file configured
-- [ ] Vercel project created and frontend deployed
-- [ ] Backend deployed to Heroku/Railway
-- [ ] Environment variables set in Vercel
-- [ ] Frontend can communicate with backend
-- [ ] Custom domain configured (optional)
-- [ ] HTTPS enabled (automatic with Vercel)
-- [ ] Tested in production
+- [ ] Vercel project created and deployed
+- [ ] Site is live at `https://unimedia.vercel.app`
+- [ ] Changes auto-deploy when you push to GitHub
 
 ---
 
-## Part 8: Common Commands Reference
+## Part 7: Common Commands Reference
 
 ### Git Commands
 
@@ -487,77 +341,67 @@ vercel deploy                 # Deploy from terminal
 vercel --prod                 # Deploy to production
 ```
 
-### Heroku Commands (Not needed - you're using Railway!)
-
-If you ever use Heroku in the future:
-
-```bash
-heroku logs --tail            # View live logs
-heroku restart                # Restart app
-heroku open                   # Open app in browser
-heroku config                 # View environment variables
-```
-
-### Railway Commands
-
-```bash
-# No CLI needed - manage everything from railway.app dashboard
-# View logs: railway.app → Project → Deployments → View Logs
-# Restart: railway.app → Project → Deployments → Redeploy
-```
-
 ---
 
-## Part 9: Troubleshooting
+## Part 8: Troubleshooting
 
 ### Issue: Vercel Build Fails
 
 - Check build logs in Vercel dashboard
-- Ensure `package.json` has all dependencies
-- Run `npm install` locally to test
+- Make sure `UniMedia_Web.html` exists in project root
+- Ensure `.gitignore` doesn't block HTML files
 
-### Issue: Backend Connection Fails
+### Issue: Site Shows 404 Error
 
-- Check backend is running: `curl https://your-backend-url/health`
-- Verify `REACT_APP_API_URL` is set in Vercel
-- Check CORS configuration in `server.js`
+- Check that your main HTML file is named `UniMedia_Web.html` or rename in Vercel settings
+- Go to Vercel Settings → General → Root Directory
 
 ### Issue: Git Remote Not Set
 
 ```bash
 git remote -v                 # View current remotes
 git remote remove origin      # Remove old remote
-git remote add origin https://github.com/yourusername/UNIMEDIA_WEBSITE.git
+git remote add origin https://github.com/yourusername/UNIMEDIA.git
 ```
 
-### Issue: Need to Change Deployed URL
+### Issue: Changes Not Deploying
 
-1. Update code locally
-2. Commit: `git commit -m "Update API URL"`
-3. Push: `git push origin main`
-4. Vercel auto-redeploys (no extra steps needed)
+1. Make sure you pushed to `main` branch: `git push origin main`
+2. Check Vercel **Deployments** tab to see if new deployment started
+3. Wait for deployment to complete (usually 30-60 seconds)
 
 ---
 
-## Part 10: After Deployment
+## Part 9: After Deployment
 
-### Monitor Your App
+Your site is now live! Here's what you can do next:
 
-- **Vercel Analytics:** Dashboard shows performance metrics
-- **Heroku Logs:** `heroku logs --tail` shows errors
-- **GitHub:** Track all changes in commit history
+### Share Your Site
 
-### Keep Code Updated
+- 📱 Share the Vercel URL: `https://unimedia.vercel.app`
+- 📤 Share the GitHub repo: `https://github.com/midddddiana24/UNIMEDIA`
+
+### Keep Updating
 
 ```bash
-# Daily workflow:
-git pull origin main          # Get latest
-# Make changes
+# Simple daily workflow:
+# 1. Make changes to your files
+# 2. Stage and commit
 git add .
-git commit -m "Update: ..."
+git commit -m "Update: [description]"
+
+# 3. Push to GitHub
 git push origin main
-# Vercel redeploys automatically!
+
+# Vercel automatically redeploys!
 ```
+
+### Add Custom Domain (Optional)
+
+1. In Vercel dashboard, go to your project
+2. Click **Settings** → **Domains**
+3. Add your custom domain (e.g., `unimedia.com`)
+4. Follow DNS configuration steps
 
 ---
 
@@ -565,8 +409,7 @@ git push origin main
 
 | Component       | Platform | URL                                         |
 | --------------- | -------- | ------------------------------------------- |
-| **Frontend**    | Vercel   | `https://unimedia.vercel.app`               |
-| **Backend**     | Railway  | `https://your-railway-backend.railway.app`  |
+| **Live Site**   | Vercel   | `https://unimedia.vercel.app`               |
 | **Source Code** | GitHub   | `https://github.com/midddddiana24/UNIMEDIA` |
 
 ---
@@ -624,8 +467,6 @@ cypress/screenshots/   (test screenshots)
 
 ---
 
-**Questions?** Check [Vercel Docs](https://vercel.com/docs) or [Heroku Docs](https://devcenter.heroku.com/)
+**Questions?** Check [Vercel Docs](https://vercel.com/docs) or [Git Docs](https://git-scm.com/doc)
 
-**Need Help?** Comment in GitHub Issues or check deployment logs.
-
-Good luck! 🚀
+**Your site is now live and auto-deploys on every push!** 🚀
