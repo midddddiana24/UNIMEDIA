@@ -19,8 +19,12 @@
 ## 🚀 User Action Required (1 minute)
 
 ```
-1. Edit .env:
+1. Edit .env (🚫 Remove key from git - use this link to unblock):
    GROQ_API_KEY=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
+
+   🔗 Unblock push: https://github.com/midddddiana24/UNIMEDIA/security/secret-scanning/unblock-secret/3D1pN65zgGI0zG76grHNtfYp9Qe
+
+   Or remove key line from TODO.md, git add/commit/push again.
 
 2. Terminal:
    npm install
