@@ -3109,12 +3109,18 @@
           <div class="section">
             <h2 class="section-title">API Configuration</h2>
             <div class="card">
-              <label class="form-label">Groq API Key</label>
-              <input type="password" id="apiKeyInput" class="form-input" placeholder="gsk_..." />
-              <p class="text-muted" style="margin-top: 8px; font-size: 12px;">Get your free API key at <a
-                  href="https://console.groq.com" target="_blank" style="color: var(--accent);">console.groq.com</a></p>
-              <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="saveAPIKey()">Save API
-                Key</button>
+              <div style="padding: 12px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; margin-bottom: 12px;">
+                <p style="margin: 0; font-size: 14px; color: #22c55e; font-weight: 500;">✅ System API Configured</p>
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #16a34a;">This system uses a reserved GROQ API key. You don't need to provide your own.</p>
+              </div>
+              <p style="color: var(--text2); font-size: 13px; line-height: 1.6;">
+                All AI processing features are powered by a system-level GROQ API key managed by the server. This means:
+              </p>
+              <ul style="margin: 10px 0 12px 20px; color: var(--text2); font-size: 13px;">
+                <li>✨ No account setup required on GROQ</li>
+                <li>🚀 Instant access to all AI tools</li>
+                <li>🔒 Your data is not tied to personal API keys</li>
+              </ul>
             </div>
           </div>
 
@@ -4095,10 +4101,7 @@
 
       async function loadUserData() {
         try {
-          if (currentUser.apiKey) {
-            document.getElementById('apiKeyInput').value = currentUser.apiKey;
-          }
-
+          // API key is now managed server-side, no need to load it here
           const history = await getUserHistory(currentUser.email);
           updateHistoryUI(history);
           updateProfileStats(history);
@@ -4183,18 +4186,7 @@
       }
 
       function openTool(tool) {
-        // Tools that DON'T need API key (just local processing)
-        const noAPIKeyRequired = ['advancedSettings', 'export'];
-
-        // Check API key only for tools that call Groq API
-        if (!noAPIKeyRequired.includes(tool)) {
-          if (!currentUser || !currentUser.apiKey) {
-            showToast('⚠️ Please set your Groq API key first in Settings', 'warning');
-            showPage('profile');
-            return;
-          }
-        }
-
+        // Note: All tools now use server-level API key, so no client-side API key validation needed
         const modal = document.getElementById('toolModal');
 
         // Hide all tool sections first
@@ -4245,13 +4237,8 @@
           throw new Error('No prompt provided');
         }
 
-        // Get API key from currentUser settings
-        if (!currentUser || !currentUser.apiKey) {
-          throw new Error('Groq API key not configured. Please add your API key in Settings.');
-        }
-
         try {
-          // Call backend endpoint with API key from user settings
+          // Call backend endpoint - server uses environment variable for API key
           const response = await fetch(`${API_URL}/api/ai`, {
             method: 'POST',
             headers: {
@@ -4259,8 +4246,7 @@
             },
             body: JSON.stringify({
               prompt: promptContent,
-              type: 'summarize',
-              apiKey: currentUser.apiKey
+              type: 'summarize'
             })
           });
 
@@ -4513,10 +4499,6 @@
           const formData = new FormData();
           formData.append('audio', file);
           // Backend will use environment variable for API key, no need to send from frontend
-          // But keep this for backward compatibility if needed
-          if (currentUser && currentUser.apiKey) {
-            formData.append('apiKey', currentUser.apiKey);
-          }
 
           const response = await fetch(`${API_URL}/api/transcribe`, {
             method: 'POST',
@@ -4716,63 +4698,37 @@ ${rawText}
         try {
           console.log('=== PROCESS PDF START ===');
 
-          // Step 1: Reload user data
-          const refreshedUser = await getUser(currentUser.email);
-          if (refreshedUser) {
-            currentUser = refreshedUser;
-            console.log('✓ Step 1: User data refreshed from database');
-            console.log('  - currentUser has apiKey:', !!currentUser.apiKey);
-            console.log('  - apiKey length:', currentUser.apiKey?.length || 0);
-            console.log('  - apiKey first 15 chars:', currentUser.apiKey?.substring(0, 15) + '...' || 'UNDEFINED');
-          }
-
-          // Step 2: Validate API key exists
-          if (!currentUser.apiKey || currentUser.apiKey.trim().length === 0) {
-            renderAIError(resultEl, '❌ API key not configured. Please save your Groq API key in Settings first.');
-            showToast('❌ API key missing. Did you save it in Settings?', 'error');
-            return;
-          }
-
-          // Step 3: Get form options
+          // Step 1: Get form options
           const summaryType = document.getElementById('summarizeType')?.value || 'standard';
           const analysisDepth = document.getElementById('analysisDepth')?.value || 'normal';
           const extractMetadata = document.getElementById('extractMetadata')?.checked || false;
           const highlightKeywords = document.getElementById('highlightKeywords')?.checked || false;
 
-          console.log('✓ Step 2: Got form options');
+          console.log('✓ Step 1: Got form options');
           console.log('  - summaryType:', summaryType);
           console.log('  - analysisDepth:', analysisDepth);
           console.log('  - extractMetadata:', extractMetadata);
           console.log('  - highlightKeywords:', highlightKeywords);
 
-          // Step 4: Build FormData
+          // Step 2: Build FormData (API key is managed server-side)
           const formData = new FormData();
           formData.append('file', file);
-          formData.append('apiKey', currentUser.apiKey);
           formData.append('summaryType', summaryType);
           formData.append('analysisDepth', analysisDepth);
           formData.append('extractMetadata', extractMetadata);
           formData.append('highlightKeywords', highlightKeywords);
 
-          console.log('✓ Step 3: Built FormData');
+          console.log('✓ Step 2: Built FormData');
           console.log('  - File:', file.name, '(' + file.size + ' bytes)');
-          console.log('  - API Key being sent:', currentUser.apiKey.substring(0, 20) + '...');
 
-          // Verify FormData was built correctly
-          for (let pair of formData.entries()) {
-            if (pair[0] === 'apiKey') {
-              console.log('  - FormData apiKey field:', pair[1].substring(0, 20) + '...');
-            }
-          }
-
-          // Step 5: Send to backend
-          console.log('✓ Step 4: Sending POST to', API_URL + '/api/document');
+          // Step 3: Send to backend
+          console.log('✓ Step 3: Sending POST to', API_URL + '/api/document');
           const response = await fetch(`${API_URL}/api/document`, {
             method: 'POST',
             body: formData
           });
 
-          console.log('✓ Step 5: Got response, status:', response.status);
+          console.log('✓ Step 4: Got response, status:', response.status);
 
           // Check response.ok BEFORE parsing JSON
           if (!response.ok) {
@@ -5070,7 +5026,6 @@ ${rawText}
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('apiKey', currentUser.apiKey || '');
             formData.append('focus', videoFocus);
             formData.append('length', summaryLength);
             formData.append('extractQuotes', extractQuotes);
@@ -5249,22 +5204,17 @@ ${text}`;
 
       // Enhanced Groq API with advanced settings
       async function callGroqAPIAdvanced(messages, model = 'llama-3.3-70b-versatile') {
-        if (!currentUser || !currentUser.apiKey) {
-          throw new Error('API key not configured');
-        }
-
         try {
-          const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          // Call backend proxy endpoint which uses the reserved API key
+          const response = await fetch(`${API_URL}/api/ai`, {
             method: 'POST',
             headers: {
-              'Authorization': 'Bearer ' + currentUser.apiKey,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              model: model,
-              messages: messages,
-              max_tokens: advancedSettings.maxTokens,
-              temperature: advancedSettings.temperature
+              prompt: messages[messages.length - 1]?.content || '',
+              type: 'advanced',
+              model: model
             })
           });
 
@@ -5274,7 +5224,7 @@ ${text}`;
           }
 
           const data = await response.json();
-          return data.choices[0].message.content;
+          return data.text || data.choices?.[0]?.message?.content || '';
         } catch (error) {
           throw new Error('Groq API Error: ' + error.message);
         }
@@ -5947,13 +5897,6 @@ ${text}`;
           if (language !== 'en') {
             showToast(`🌐 Translating to ${languageName}...`, 'info');
 
-            if (!currentUser || !currentUser.apiKey) {
-              showToast('⚠️ API key required for translation. Please set it in Settings.', 'warning');
-              if (buttonsDiv) buttonsDiv.style.display = 'flex';
-              if (controlsDiv) controlsDiv.style.display = 'none';
-              return;
-            }
-
             try {
               const translationPrompt = `Translate the following text to ${languageName}. Only provide the translated text, nothing else:\n\n${fullText}`;
 
@@ -5964,8 +5907,7 @@ ${text}`;
                 },
                 body: JSON.stringify({
                   prompt: translationPrompt,
-                  type: 'translate',
-                  apiKey: currentUser.apiKey
+                  type: 'translate'
                 })
               });
 
@@ -6593,7 +6535,6 @@ File size: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
         try {
           const formData = new FormData();
           formData.append('image', file);
-          formData.append('apiKey', currentUser.apiKey || '');
           formData.append('quality', ocrQuality);
 
           const response = await fetch(`${API_URL}/api/image-ocr`, {
@@ -6719,52 +6660,9 @@ ${rawText}`;
       });
 
       async function saveAPIKey() {
-        const apiKey = document.getElementById('apiKeyInput').value.trim();
-
-        console.log('=== SAVING API KEY ===');
-        console.log('Input value:', apiKey);
-        console.log('Input length:', apiKey.length);
-        console.log('Starts with gsk_:', apiKey.startsWith('gsk_'));
-
-        if (!apiKey) {
-          showToast('Please enter an API key', 'warning');
-          return;
-        }
-        if (!apiKey.startsWith('gsk_') && !apiKey.startsWith('gsk-')) {
-          showToast('⚠️ API key should start with "gsk_". Make sure it is correct.', 'warning');
-          return;
-        }
-
-        try {
-          // Update the current user object
-          currentUser.apiKey = apiKey;
-          console.log('1. Updated currentUser.apiKey to:', currentUser.apiKey.substring(0, 20) + '...');
-
-          // Save to database
-          await updateUser(currentUser);
-          console.log('2. Saved to IndexedDB');
-
-          // Immediately reload from database to verify
-          const reloadedUser = await getUser(currentUser.email);
-          console.log('3. Reloaded from database - has apiKey:', !!reloadedUser?.apiKey);
-          console.log('3b. Reloaded apiKey:', reloadedUser?.apiKey?.substring(0, 20) + '...');
-
-          if (reloadedUser && reloadedUser.apiKey && reloadedUser.apiKey.length > 0) {
-            currentUser = reloadedUser;
-            console.log('✓ API KEY VERIFICATION SUCCESS - Key is in database');
-            console.log('✓ API key length:', currentUser.apiKey.length);
-            console.log('✓ API key first 10 chars:', currentUser.apiKey.substring(0, 10));
-
-            // Clear the input field
-            document.getElementById('apiKeyInput').value = '';
-            showToast('✅ API key saved successfully! (' + currentUser.apiKey.substring(0, 10) + '...)', 'success');
-          } else {
-            throw new Error('API key not found in database after saving');
-          }
-        } catch (error) {
-          showToast('❌ Error saving API key: ' + error.message, 'error');
-          console.error('API key save error:', error);
-        }
+        // API key is now managed server-side. This function is deprecated.
+        showToast('✅ System is using a reserved API key. No action needed!', 'success');
+        return;
       }
 
       function changePassword() {

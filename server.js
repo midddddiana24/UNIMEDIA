@@ -109,8 +109,8 @@ app.get('/health', (req, res) => {
 // ═══════════════════════════════════════════════════════════
 app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
   try {
-    // Get API key from request body (user-provided from frontend)
-    const apiKey = req.body.apiKey;
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKey = process.env.GROQ_API_KEY || req.body.apiKey;
     const audioFile = req.file;
 
     if (!audioFile) {
@@ -123,7 +123,7 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
     if (!apiKey) {
       return res.status(400).json({ 
         error: 'API key required',
-        text: '⚠️ Error: Groq API key not provided. Please add your API key in Settings.'
+        text: '⚠️ Error: Groq API key not configured on server.'
       });
     }
 
@@ -186,15 +186,15 @@ app.post('/api/transcribe', upload.single('audio'), async (req, res) => {
 // ═══════════════════════════════════════════════════════════
 app.post('/api/ai', async (req, res) => {
   try {
-    // Use API key from request body (user-provided from frontend)
-    const apiKey = req.body.apiKey;
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKey = process.env.GROQ_API_KEY || req.body.apiKey;
     const { prompt, type = 'summarize' } = req.body;
 
     if (!apiKey) {
       return res.status(400).json({ 
         error: 'API key required',
         source: 'local',
-        text: '⚠️ Error: Groq API key not configured. Please add your API key in Settings.'
+        text: '⚠️ Error: Groq API key not configured on server.'
       });
     }
 
@@ -236,7 +236,7 @@ app.post('/api/ai', async (req, res) => {
       return res.status(response.status).json({
         error: errorData.error?.message || 'Groq API error',
         source: 'local',
-        text: `⚠️ Error: ${errorData.error?.message || 'Failed to process request with Groq API. Check your API key is valid.'}`
+        text: `⚠️ Error: ${errorData.error?.message || 'Failed to process request with Groq API.'}`
       });
     }
 
@@ -274,42 +274,23 @@ app.post('/api/document', upload.single('file'), async (req, res) => {
     console.log('File size:', documentFile?.size, 'bytes');
     console.log('Form fields received:', Object.keys(req.body));
     console.log('');
-    console.log('API KEY DETAILED CHECK:');
-    console.log('  - Received apiKey (raw):', apiKey);
-    console.log('  - apiKey type:', typeof apiKey);
-    console.log('  - apiKey length:', apiKey?.length || 'NULL/UNDEFINED');
-    console.log('  - apiKey is empty string:', apiKey === '');
-    console.log('  - apiKey is null:', apiKey === null);
-    console.log('  - apiKey is undefined:', apiKey === undefined);
-    console.log('  - apiKey trimmed:', apiKey?.trim ? apiKey.trim() : 'NO TRIM METHOD');
-    console.log('  - apiKey trimmed length:', apiKey?.trim?.().length || 0);
-    console.log('  - Starts with gsk_:', apiKey?.startsWith?.('gsk_') || false);
-    console.log('  - First 15 chars:', apiKey?.substring(0, 15) || 'N/A');
-    console.log('');
-    console.log('Summary options:');
-    console.log('  - summaryType:', summaryType);
-    console.log('  - analysisDepth:', analysisDepth);
-    console.log('  - extractMetadata:', extractMetadata);
-    console.log('  - highlightKeywords:', highlightKeywords);
-    console.log('');
 
     if (!documentFile) {
       return res.status(400).json({ error: 'No document file provided', text: '⚠️ Error: No document uploaded' });
     }
 
-    // Use API key from request body (user-provided from frontend)
-    const apiKeyToUse = apiKey;
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKeyToUse = process.env.GROQ_API_KEY || apiKey;
     
     console.log('API KEY RESOLUTION:');
+    console.log('  - Using environment GROQ_API_KEY:', !!process.env.GROQ_API_KEY);
     console.log('  - Using form apiKey:', !!apiKey);
-    console.log('  - apiKeyToUse value:', apiKeyToUse ? apiKeyToUse.substring(0, 15) + '...' : 'NULL');
     console.log('  - apiKeyToUse length:', apiKeyToUse?.length || 0);
     console.log('');
     
     if (!apiKeyToUse || apiKeyToUse.trim?.().length === 0) {
       console.log('❌ VALIDATION FAILED: No API key available');
-      console.log('   - form apiKey:', apiKey ? 'EXISTS' : 'NOT SENT');
-      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: API key not provided. Please add your API key in Settings.' });
+      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: API key not configured on server.' });
     }
 
     if (!apiKeyToUse.startsWith('gsk_')) {
@@ -584,8 +565,11 @@ app.post('/api/pdf', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No PDF file provided', text: '⚠️ Error: No PDF file uploaded' });
     }
 
-    if (!apiKey) {
-      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: Groq API key not provided' });
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKeyToUse = process.env.GROQ_API_KEY || apiKey;
+    
+    if (!apiKeyToUse) {
+      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: API key not configured on server.' });
     }
 
     const { PDFParse } = require('pdf-parse');
@@ -667,7 +651,7 @@ ${limitedText}`;
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKeyToUse}`
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
@@ -705,10 +689,13 @@ app.post('/api/video', upload.single('file'), async (req, res) => {
       });
     }
 
-    if (!apiKey) {
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKeyToUse = process.env.GROQ_API_KEY || apiKey;
+
+    if (!apiKeyToUse) {
       return res.status(400).json({ 
         error: 'API key required',
-        text: '⚠️ Error: Groq API key not provided. Please add your API key in Settings.'
+        text: '⚠️ Error: API key not configured on server.'
       });
     }
 
@@ -729,7 +716,7 @@ app.post('/api/video', upload.single('file'), async (req, res) => {
       const transcribeRes = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKeyToUse}`
         },
         body: formData
       });
@@ -760,7 +747,7 @@ app.post('/api/video', upload.single('file'), async (req, res) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKeyToUse}`
         },
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
@@ -818,10 +805,13 @@ app.post('/api/image-analyze', async (req, res) => {
   try {
     const { imageData, apiKey } = req.body;
 
-    if (!apiKey) {
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKeyToUse = process.env.GROQ_API_KEY || apiKey;
+
+    if (!apiKeyToUse) {
       return res.status(400).json({
         error: 'API key required',
-        text: '⚠️ Error: Groq API key not provided. Please add your API key in Settings.'
+        text: '⚠️ Error: API key not configured on server.'
       });
     }
 
@@ -1008,9 +998,9 @@ app.post('/api/image-ocr', upload.single('image'), async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════
-// PDF PROCESSING ENDPOINT
+// PDF PROCESSING ENDPOINT (DUPLICATE)
 // ═══════════════════════════════════════════════════════════
-app.post('/api/pdf', upload.single('file'), async (req, res) => {
+app.post('/api/pdf-legacy', upload.single('file'), async (req, res) => {
   try {
     const pdfFile = req.file;
     const { apiKey } = req.body;
@@ -1018,8 +1008,12 @@ app.post('/api/pdf', upload.single('file'), async (req, res) => {
     if (!pdfFile) {
       return res.status(400).json({ error: 'No PDF file provided', text: '⚠️ Error: No PDF uploaded' });
     }
-    if (!apiKey) {
-      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: Groq API key not provided in Settings.' });
+
+    // Use reserved API key from environment, or user-provided key if available
+    const apiKeyToUse = process.env.GROQ_API_KEY || apiKey;
+    
+    if (!apiKeyToUse) {
+      return res.status(400).json({ error: 'API key required', text: '⚠️ Error: API key not configured on server.' });
     }
 
     const parser = new PDFParse({ data: pdfFile.buffer });
@@ -1036,7 +1030,7 @@ app.post('/api/pdf', upload.single('file'), async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${apiKeyToUse}`
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
@@ -1123,8 +1117,13 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'UniMedia_Web.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🤖 UniMedia server running at http://localhost:${PORT}`);
-  console.log('✅ All features including audio transcription are now working!');
-});
+// Export app for testing
+module.exports = app;
+
+// Start server only if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🤖 UniMedia server running at http://localhost:${PORT}`);
+    console.log('✅ All features including audio transcription are now working!');
+  });
+}
